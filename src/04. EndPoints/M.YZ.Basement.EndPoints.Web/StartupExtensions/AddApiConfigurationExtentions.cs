@@ -8,7 +8,7 @@ namespace M.YZ.Basement.EndPoints.Web.StartupExtensions
 {
     public static class AddApiConfigurationExtensions
     {
-        public static IServiceCollection AddBasmentApiServices(this IServiceCollection services,
+        public static IServiceCollection AddBasementApiServices(this IServiceCollection services,
             IConfiguration configuration)
         {
             var basementConfigurations = new BasementConfigurationOptions();

@@ -52,9 +52,9 @@
 		<ProjectReference Include="..\..\02. Core\M.YZ.Basement.Core.ApplicationServices\M.YZ.Basement.Core.ApplicationServices.csproj" />
 		<ProjectReference Include="..\..\02. Core\M.YZ.Basement.Core.Domain.Toolkits\M.YZ.Basement.Core.Domain.Toolkits.csproj" />
 		<ProjectReference Include="..\..\02. Core\M.YZ.Basement.Core.Domain\M.YZ.Basement.Core.Domain.csproj" />
-		<ProjectReference Include="..\..\03. Infra\Data\M.YZ.Basement.Infra.Data.Sql.Commands\M.YZ.Basement.Infra.Data.Sql.Commands.csproj" />
-		<ProjectReference Include="..\..\03. Infra\Data\M.YZ.Basement.Infra.Data.Sql.Queries\M.YZ.Basement.Infra.Data.Sql.Queries.csproj" />
-		<ProjectReference Include="..\..\03. Infra\Data\M.YZ.Basement.Infra.Data.Sql\M.YZ.Basement.Infra.Data.Sql.csproj" />
+		<ProjectReference Include="..\..\03. Infra\Data\SqlServer\M.YZ.Basement.Infra.Data.Sql.Commands\M.YZ.Basement.Infra.Data.Sql.Commands.csproj" />
+		<ProjectReference Include="..\..\03. Infra\Data\SqlServer\M.YZ.Basement.Infra.Data.Sql.Queries\M.YZ.Basement.Infra.Data.Sql.Queries.csproj" />
+		<ProjectReference Include="..\..\03. Infra\Data\SqlServer\M.YZ.Basement.Infra.Data.Sql\M.YZ.Basement.Infra.Data.Sql.csproj" />
 		<ProjectReference Include="..\..\03. Infra\Events\M.YZ.Basement.Infra.Events.Outbox\M.YZ.Basement.Infra.Events.Outbox.csproj" />
 		<ProjectReference Include="..\..\03. Infra\Events\M.YZ.Basement.Infra.Events.PoolingPublisher\M.YZ.Basement.Infra.Events.PoolingPublisher.csproj" />
 		<ProjectReference Include="..\..\03. Infra\Messaging\M.YZ.Basement.Messaging.IdempotentConsumers.Store.Sql\M.YZ.Basement.Messaging.IdempotentConsumers.Store.Sql.csproj" />

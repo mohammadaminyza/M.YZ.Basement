@@ -3,7 +3,7 @@ using M.YZ.Basement.MiniBlog.Core.Domain.Writers.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 
-namespace M.YZ.Basement.MiniBlog.Infra.Data.Sql.Commands.Common
+namespace Zamin.MiniBlog.Infra.Data.Sql.Commands.Common
 {
     public class MiniblogDbContext : BaseCommandDbContext
     {

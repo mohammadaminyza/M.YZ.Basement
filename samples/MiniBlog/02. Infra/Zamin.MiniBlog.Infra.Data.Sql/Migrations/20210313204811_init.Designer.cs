@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Zamin.MiniBlog.Infra.Data.Sql.Commands.Common;
 
 namespace M.YZ.Basement.MiniBlog.Infra.Data.Sql.Commands.Migrations
 {

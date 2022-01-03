@@ -6,6 +6,7 @@ using M.YZ.Basement.Utilities.Configurations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Zamin.MiniBlog.Infra.Data.Sql.Commands.Common;
 
 var builder = new BasementProgram().Main(args, "appsettings.json", "appsettings.zamin.json", "appsettings.serilog.json");
 

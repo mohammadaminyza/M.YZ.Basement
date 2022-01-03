@@ -2,6 +2,7 @@
 using M.YZ.Basement.MiniBlog.Core.Domain.Writers.Entities;
 using M.YZ.Basement.MiniBlog.Core.Domain.Writers.Repositories;
 using M.YZ.Basement.MiniBlog.Infra.Data.Sql.Commands.Common;
+using Zamin.MiniBlog.Infra.Data.Sql.Commands.Common;
 
 namespace M.YZ.Basement.MiniBlog.Infra.Data.Sql.Commands.Writers
 {

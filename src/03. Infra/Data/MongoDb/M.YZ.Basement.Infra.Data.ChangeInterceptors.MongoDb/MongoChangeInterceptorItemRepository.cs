@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Zamin.Infra.Data.ChangeInterceptors.EntityChageInterceptorItems;
+using M.YZ.Basement.Infra.Data.ChangeInterceptors.EntityChageInterceptorItems;
 
-namespace Zamin.Infra.Data.ChangeInterceptors.MongoDb
+namespace M.YZ.Basement.Infra.Data.ChangeInterceptors.MongoDb
 {
     public class MongoEntityChangeInterceptorItemRepository : IEntityChageInterceptorItemRepository
     {

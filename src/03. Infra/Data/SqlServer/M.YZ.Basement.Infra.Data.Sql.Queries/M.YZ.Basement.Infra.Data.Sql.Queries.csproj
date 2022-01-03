@@ -14,8 +14,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\..\02. Core\M.YZ.Basement.Core.Contracts\M.YZ.Basement.Core.Contracts.csproj" />
-		<ProjectReference Include="..\..\..\02. Core\M.YZ.Basement.Core.Domain\M.YZ.Basement.Core.Domain.csproj" />
 		<ProjectReference Include="..\M.YZ.Basement.Infra.Data.Sql\M.YZ.Basement.Infra.Data.Sql.csproj" />
 	</ItemGroup>
 

@@ -24,10 +24,11 @@ public class PageQuery<TData> : IPageQuery<TData>
     /// تعیین اینکه آیا نیاز است تعداد کل رکورد‌های موجود در جستجو نیز بازگردانده شود یا خیر
     /// </summary>
     public bool NeedTotalCount { get; set; }
+
     /// <summary>
     /// تعیین ستونی که مرتب سازی بر اساس آن انجام می شود
     /// </summary>
-    public string SortBy { get; set; } = "Id";
+    public string SortBy { get; set; }
 
     /// <summary>
     /// جهت مرتب سازی داده‌ها که به صورت صعودی انجام می‌شود یا نزولی

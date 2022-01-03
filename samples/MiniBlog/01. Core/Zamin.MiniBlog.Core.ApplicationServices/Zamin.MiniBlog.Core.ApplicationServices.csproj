@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Resources\**" />
+    <EmbeddedResource Remove="Resources\**" />
+    <None Remove="Resources\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\src\02. Core\M.YZ.Basement.Core.ApplicationServices\M.YZ.Basement.Core.ApplicationServices.csproj" />
+    <ProjectReference Include="..\Zamin.MiniBlog.Core.Domain\Zamin.MiniBlog.Core.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

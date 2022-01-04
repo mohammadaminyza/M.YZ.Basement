@@ -98,7 +98,7 @@ public abstract class BaseCommandDbContext : DbContext
         var _basementConfigurations = this.GetService<BasementConfigurationOptions>();
         setShadowProperties();
         if (_basementConfigurations.ApplicationEvents.TransactionalEventsEnabled)
-            addOutboxEvetItems();
+            addOutboxEventItems();
         if (_basementConfigurations.EntityChangeInterception.Enabled)
             addEntityChangeInterceptorItems();
     }
@@ -110,7 +110,7 @@ public abstract class BaseCommandDbContext : DbContext
         ChangeTracker.SetAuditableEntityPropertyValues(userInfoService);
     }
 
-    private void addOutboxEvetItems()
+    private void addOutboxEventItems()
     {
         var changedAggregates = ChangeTracker.GetAggregatesWithEvent();
         var userInfoService = this.GetService<IUserInfoService>();
@@ -161,7 +161,7 @@ public abstract class BaseCommandDbContext : DbContext
                 UserId = userInfoService.UserId().ToString(),
                 Ip = userInfoService.GetUserIp(),
                 EntityType = entity.Entity.GetType().FullName,
-                EntityId = entity.Property("BusinessId").CurrentValue.ToString(),
+                EntityId = entity.Property("BusinessId").CurrentValue?.ToString(),
                 DateOfOccurrence = dateOfAccured,
                 ChangeType = entity.State.ToString(),
                 ContextName = GetType().FullName

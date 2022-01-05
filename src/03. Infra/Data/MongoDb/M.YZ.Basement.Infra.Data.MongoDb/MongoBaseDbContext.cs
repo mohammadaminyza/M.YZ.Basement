@@ -7,9 +7,10 @@ namespace M.YZ.Basement.Infra.Data.MongoDb;
 public abstract class MongoBaseDbContext
 {
     private readonly MongoUrl _connectionString;
-    private Dictionary<TrackerType, List<TrackedModel<dynamic>>> _insertTrackerModels = new();
-    private Dictionary<TrackerType, List<TrackedModel<dynamic>>> _updateTrackerModels = new();
-    private Dictionary<TrackerType, List<TrackedModel<dynamic>>> _deleteTrackerModels = new();
+
+    //Todo ReValuate Tracker And CommitHandler
+    //Todo Change Tracker Files
+    private Dictionary<TrackerType, List<TrackedModel<dynamic>>> _trackerModels = new();
 
     protected IMongoClient MongoClient { get; set; }
     protected IMongoDatabase MongoDatabase { get; set; }
@@ -45,7 +46,7 @@ public abstract class MongoBaseDbContext
             throw new ArgumentNullException(nameof(entity));
         }
 
-        var trackerType = new TrackerType(nameof(entity), typeof(TEntity));
+        var trackerType = new TrackerType(nameof(entity), typeof(TEntity), TrackedModelState.Added);
 
         InsertTrackerManager(trackerType, entity);
 
@@ -65,7 +66,7 @@ public abstract class MongoBaseDbContext
             throw new ArgumentNullException(nameof(entities));
         }
 
-        var trackerType = new TrackerType(nameof(TEntity), typeof(TEntity));
+        var trackerType = new TrackerType(nameof(TEntity), typeof(TEntity), TrackedModelState.Added);
 
         foreach (var entity in entities)
         {
@@ -90,7 +91,7 @@ public abstract class MongoBaseDbContext
             throw new ArgumentNullException(nameof(entity));
         }
 
-        var trackerType = new TrackerType(nameof(entity), typeof(TEntity));
+        var trackerType = new TrackerType(nameof(entity), typeof(TEntity), TrackedModelState.Update);
 
     }
 
@@ -107,7 +108,7 @@ public abstract class MongoBaseDbContext
             throw new ArgumentNullException(nameof(entity));
         }
 
-        var trackerType = new TrackerType(nameof(entity), typeof(TEntity));
+        var trackerType = new TrackerType(nameof(entity), typeof(TEntity), TrackedModelState.Deleted);
 
         RemoveTrackerManager(trackerType, entity);
     }
@@ -163,15 +164,6 @@ public abstract class MongoBaseDbContext
             //await Task.Run(BeginTransaction);
             using var session = await MongoClient.StartSessionAsync();
 
-            //var transactionOptions = new TransactionOptions(
-            //    readPreference: ReadPreference.Primary,
-            //    readConcern: ReadConcern.Local,
-            //    writeConcern: WriteConcern.WMajority);
-
-            //await session.WithTransactionAsync(async (s, ct) =>
-            //{
-            //}, transactionOptions);
-
             await Task.Run(ExecuteCommitHandler);
 
             await CommitTransactionAsync();
@@ -185,48 +177,55 @@ public abstract class MongoBaseDbContext
         }
     }
 
-    public virtual void BeginTransaction()
+
+    protected virtual void BeginTransaction()
     {
         _clientSessionHandle.StartTransaction();
     }
 
+    /// <summary>
+    /// Start MongoClient Session
+    /// </summary>
     private void StartClientSection()
     {
         var clientSessionHandler = MongoClient.StartSession();
         _clientSessionHandle = clientSessionHandler;
     }
 
-    private async Task StartClientSectionAsync()
+    protected async Task StartClientSectionAsync()
     {
         var clientSessionHandler = await MongoClient.StartSessionAsync();
         _clientSessionHandle = clientSessionHandler;
     }
 
-    public virtual void RollbackTransaction()
+    protected virtual void RollbackTransaction()
     {
         _clientSessionHandle.AbortTransaction();
     }
 
-    public virtual async Task RollbackTransactionAsync()
+    protected virtual async Task RollbackTransactionAsync()
     {
         await _clientSessionHandle.AbortTransactionAsync();
     }
 
-    public virtual void CommitTransaction()
+    protected virtual void CommitTransaction()
     {
         _clientSessionHandle.CommitTransaction();
     }
 
-    public virtual async Task CommitTransactionAsync()
+    protected virtual async Task CommitTransactionAsync()
     {
         await _clientSessionHandle.CommitTransactionAsync();
     }
 
+    /// <summary>
+    /// Execute Commit Handler For Commit Logic Manager
+    /// </summary>
     private void ExecuteCommitHandler()
     {
         TrackedModelCommitHandler commitHandler = new TrackedModelCommitHandler(MongoClient, MongoDatabase);
 
-        foreach (var trackerModel in _insertTrackerModels)
+        foreach (var trackerModel in _trackerModels)
         {
             var collectionName = GetCollectionByTrackerModelEntityType(trackerModel);
 
@@ -241,81 +240,71 @@ public abstract class MongoBaseDbContext
         }
     }
 
+    /// <summary>
+    /// Rest The Tracker
+    /// </summary>
     private void EmptyTacker()
     {
-        _insertTrackerModels = new();
-        _updateTrackerModels = new();
-        _deleteTrackerModels = new();
+        _trackerModels = new();
     }
 
     private void InsertTrackerManager<TEntity>(TrackerType trackerType, TEntity entity)
     {
-        if (_insertTrackerModels.Any(p => p.Key == trackerType))
+        if (_trackerModels.Any(p => p.Key == trackerType))
         {
-            if (_insertTrackerModels.Any(p => p.Key == trackerType && !p.Value.Any(v => v.Model == entity)))
+            if (_trackerModels.Any(p => p.Key == trackerType && !p.Value.Any(v => v.Model == entity)))
             {
 
-                var currentDic = _insertTrackerModels.Where(p => p.Key == trackerType).Select(p => p.Value)
+                var currentDic = _trackerModels.Where(p => p.Key == trackerType).Select(p => p.Value)
                     .SingleOrDefault();
                 currentDic.Add(TrackedModel<dynamic>.Add(entity));
 
-                _insertTrackerModels.Remove(trackerType);
-                _insertTrackerModels.Add(trackerType, currentDic);
+                _trackerModels.Remove(trackerType);
+                _trackerModels.Add(trackerType, currentDic);
             }
 
             return;
         }
         else
         {
-            _insertTrackerModels.Add(trackerType, new List<TrackedModel<dynamic>>() { TrackedModel<dynamic>.Add(entity) });
+            _trackerModels.Add(trackerType, new List<TrackedModel<dynamic>>() { TrackedModel<dynamic>.Add(entity) });
         }
     }
     private void UpdateTrackerManager<TEntity>(TrackerType trackerType, TEntity entity)
     {
-        if (_updateTrackerModels.Any(p => p.Key == trackerType))
+        if (_trackerModels.Any(p => p.Key == trackerType))
         {
-            if (_updateTrackerModels.Any(p => p.Key == trackerType && !p.Value.Any(v => v.Model == entity)))
+            if (_trackerModels.Any(p => p.Key == trackerType && !p.Value.Any(v => v.Model == entity)))
             {
-
-                var currentDic = _updateTrackerModels.Where(p => p.Key == trackerType).Select(p => p.Value)
+                var currentDic = _trackerModels.Where(p => p.Key == trackerType && p.Key.TrackerState == TrackedModelState.Update).Select(p => p.Value)
                     .SingleOrDefault();
 
                 currentDic.Add(new(entity, TrackedModelState.Update));
 
-                _updateTrackerModels.Add(trackerType, new List<TrackedModel<dynamic>>() { TrackedModel<dynamic>.Update(entity) });
+                _trackerModels.Add(trackerType, new List<TrackedModel<dynamic>>() { TrackedModel<dynamic>.Update(entity) });
             }
 
             return;
         }
         else
         {
-            _updateTrackerModels.Add(trackerType, new List<TrackedModel<dynamic>>() { TrackedModel<dynamic>.Update(entity) });
+            _trackerModels.Add(trackerType, new List<TrackedModel<dynamic>>() { TrackedModel<dynamic>.Update(entity) });
         }
     }
     private void RemoveTrackerManager<TEntity>(TrackerType trackerType, TEntity entity)
     {
-        if (_deleteTrackerModels.Any(p => p.Key == trackerType))
+        if (_trackerModels.Any(p => p.Key == trackerType && !p.Value.Any(v => v.Model == entity)))
         {
-            if (_deleteTrackerModels.Any(p => p.Key == trackerType))
-            {
-                if (_deleteTrackerModels.Any(p => p.Key == trackerType && !p.Value.Any(v => v.Model == entity)))
-                {
-                    var currentTracker = _deleteTrackerModels.Values.ToList().Single();
-                    currentTracker.Add(new TrackedModel<dynamic>(entity, TrackedModelState.Deleted));
+            var currentTracker = _trackerModels.Values.ToList().Single();
+            currentTracker.Add(new TrackedModel<dynamic>(entity, TrackedModelState.Deleted));
 
 
-                    _deleteTrackerModels.Remove(trackerType);
-                    _deleteTrackerModels.Add(trackerType, currentTracker);
-                }
-
-                return;
-            }
-
-            _deleteTrackerModels.Add(trackerType, new List<TrackedModel<dynamic>>() { new(entity, TrackedModelState.Deleted) });
+            _trackerModels.Remove(trackerType);
+            _trackerModels.Add(trackerType, currentTracker);
         }
         else
         {
-            _deleteTrackerModels.Add(trackerType, new List<TrackedModel<dynamic>>() { new(entity, TrackedModelState.Deleted) });
+            _trackerModels.Add(trackerType, new List<TrackedModel<dynamic>>() { new(entity, TrackedModelState.Deleted) });
         }
     }
 
@@ -326,8 +315,13 @@ public abstract class MongoBaseDbContext
         MethodInfo getCollectionType = GetType().GetMethod("GetMongoCollectionNameByEntityDefaultName")
             ?.MakeGenericMethod(trackerType);
 
-        var collection = getCollectionType?.Invoke(this, null).ToString();
+        var collection = getCollectionType?.Invoke(this, null)?.ToString();
+
+        if (string.IsNullOrEmpty(collection))
+            throw new NullReferenceException("Collection Name Is Null Or Empty");
 
         return collection;
     }
+
+    //public event EventHandler EntityChangedTracker;
 }

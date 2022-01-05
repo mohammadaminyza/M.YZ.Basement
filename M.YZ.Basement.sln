@@ -89,7 +89,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SqlServer", "SqlServer", "{
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "M.YZ.Basement.Infra.Data.ChangeInterceptors.MongoDb", "src\03. Infra\Data\MongoDb\M.YZ.Basement.Infra.Data.ChangeInterceptors.MongoDb\M.YZ.Basement.Infra.Data.ChangeInterceptors.MongoDb.csproj", "{6CABAFD5-6D6F-44B0-8F20-33252B26667E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "M.YZ.Basement.Infra.Data.MongoDb", "src\03. Infra\Data\MongoDb\M.YZ.Basement.Infra.Data.MongoDb\M.YZ.Basement.Infra.Data.MongoDb.csproj", "{1A2E1412-8808-49DA-B172-28CE0A53CCFA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "M.YZ.Basement.Infra.Data.MongoDb", "src\03. Infra\Data\MongoDb\M.YZ.Basement.Infra.Data.MongoDb\M.YZ.Basement.Infra.Data.MongoDb.csproj", "{1A2E1412-8808-49DA-B172-28CE0A53CCFA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "M.YZ.Basement.EndPoints.Web.MongoDb", "src\04. EndPoints\M.YZ.Basement.EndPoints.Web.MongoDb\M.YZ.Basement.EndPoints.Web.MongoDb.csproj", "{FEB15F5F-1CD3-42BA-A2EF-975E4ED826E6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "M.YZ.Basement.EndPoints.Web.SqlServer", "src\04. EndPoints\M.YZ.Basement.EndPoints.Web.SqlServer\M.YZ.Basement.EndPoints.Web.SqlServer.csproj", "{98E2896A-F18C-441A-8938-F468183DFB25}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -209,6 +213,14 @@ Global
 		{1A2E1412-8808-49DA-B172-28CE0A53CCFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1A2E1412-8808-49DA-B172-28CE0A53CCFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1A2E1412-8808-49DA-B172-28CE0A53CCFA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FEB15F5F-1CD3-42BA-A2EF-975E4ED826E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FEB15F5F-1CD3-42BA-A2EF-975E4ED826E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FEB15F5F-1CD3-42BA-A2EF-975E4ED826E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FEB15F5F-1CD3-42BA-A2EF-975E4ED826E6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{98E2896A-F18C-441A-8938-F468183DFB25}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{98E2896A-F18C-441A-8938-F468183DFB25}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{98E2896A-F18C-441A-8938-F468183DFB25}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{98E2896A-F18C-441A-8938-F468183DFB25}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -255,6 +267,8 @@ Global
 		{9F080A81-F377-424E-A9BD-89F5277C52EB} = {0D4F6C7C-2BB8-4D6F-BA61-0CDE70BFB60E}
 		{6CABAFD5-6D6F-44B0-8F20-33252B26667E} = {2FACEBF9-B937-4A47-9934-AAB067E2E848}
 		{1A2E1412-8808-49DA-B172-28CE0A53CCFA} = {2FACEBF9-B937-4A47-9934-AAB067E2E848}
+		{FEB15F5F-1CD3-42BA-A2EF-975E4ED826E6} = {9F3D8639-2A2B-4B1C-88F0-56EB14C12E09}
+		{98E2896A-F18C-441A-8938-F468183DFB25} = {9F3D8639-2A2B-4B1C-88F0-56EB14C12E09}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D5D1ECA0-C4FC-4886-ABDA-F867CC0914D9}

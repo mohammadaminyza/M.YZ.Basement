@@ -21,7 +21,7 @@
 		<PackageReference Include="Serilog.Sinks.MongoDB" Version="5.1.1" />
 		<PackageReference Include="Serilog.Sinks.MSSqlServer" Version="5.7.0-dev-00405" />
 		<PackageReference Include="Serilog.Sinks.RabbitMQ" Version="6.0.0" />
-		<PackageReference Include="Serilog.Sinks.Seq" Version="5.1.0" />
+		<PackageReference Include="Serilog.Sinks.Seq" Version="5.1.1" />
 		<PackageReference Include="Serilog.Sinks.Telegram" Version="0.2.1" />
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
 		<PackageReference Include="System.Data.SqlClient" Version="4.8.3" />

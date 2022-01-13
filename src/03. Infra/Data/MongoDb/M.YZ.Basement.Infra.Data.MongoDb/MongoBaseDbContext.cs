@@ -10,6 +10,7 @@ public abstract class MongoBaseDbContext
 
     //Todo ReValuate Tracker And CommitHandler
     //Todo Change Tracker Files
+    //private Dictionary<TrackerType, Dictionary<TrackedModelState, TrackedModel<dynamic>>> _trackerModels = new();
     private Dictionary<TrackerType, List<TrackedModel<dynamic>>> _trackerModels = new();
 
     protected IMongoClient MongoClient { get; set; }
@@ -46,7 +47,7 @@ public abstract class MongoBaseDbContext
             throw new ArgumentNullException(nameof(entity));
         }
 
-        var trackerType = new TrackerType(nameof(entity), typeof(TEntity), TrackedModelState.Added);
+        var trackerType = new TrackerType(nameof(entity), typeof(TEntity));
 
         InsertTrackerManager(trackerType, entity);
 
@@ -66,7 +67,7 @@ public abstract class MongoBaseDbContext
             throw new ArgumentNullException(nameof(entities));
         }
 
-        var trackerType = new TrackerType(nameof(TEntity), typeof(TEntity), TrackedModelState.Added);
+        var trackerType = new TrackerType(nameof(TEntity), typeof(TEntity));
 
         foreach (var entity in entities)
         {
@@ -91,7 +92,7 @@ public abstract class MongoBaseDbContext
             throw new ArgumentNullException(nameof(entity));
         }
 
-        var trackerType = new TrackerType(nameof(entity), typeof(TEntity), TrackedModelState.Update);
+        var trackerType = new TrackerType(nameof(entity), typeof(TEntity));
 
     }
 
@@ -108,7 +109,7 @@ public abstract class MongoBaseDbContext
             throw new ArgumentNullException(nameof(entity));
         }
 
-        var trackerType = new TrackerType(nameof(entity), typeof(TEntity), TrackedModelState.Deleted);
+        var trackerType = new TrackerType(nameof(entity), typeof(TEntity));
 
         RemoveTrackerManager(trackerType, entity);
     }
@@ -276,7 +277,7 @@ public abstract class MongoBaseDbContext
         {
             if (_trackerModels.Any(p => p.Key == trackerType && !p.Value.Any(v => v.Model == entity)))
             {
-                var currentDic = _trackerModels.Where(p => p.Key == trackerType && p.Key.TrackerState == TrackedModelState.Update).Select(p => p.Value)
+                var currentDic = _trackerModels.Where(p => p.Key == trackerType /*&& p.Key.TrackerState == TrackedModelState.Update*/).Select(p => p.Value)
                     .SingleOrDefault();
 
                 currentDic.Add(new(entity, TrackedModelState.Update));

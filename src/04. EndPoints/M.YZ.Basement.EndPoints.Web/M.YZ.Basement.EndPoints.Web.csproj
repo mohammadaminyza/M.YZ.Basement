@@ -55,6 +55,7 @@
 		<ProjectReference Include="..\..\03. Infra\Data\M.YZ.Basement.Infra.Data.ChangeInterceptors\M.YZ.Basement.Infra.Data.ChangeInterceptors.csproj" />
 		<ProjectReference Include="..\..\03. Infra\Events\M.YZ.Basement.Infra.Events.Outbox\M.YZ.Basement.Infra.Events.Outbox.csproj" />
 		<ProjectReference Include="..\..\03. Infra\Events\M.YZ.Basement.Infra.Events.PoolingPublisher\M.YZ.Basement.Infra.Events.PoolingPublisher.csproj" />
+		<ProjectReference Include="..\..\03. Infra\IoC\M.YZ.Basement.Infra.IoC\M.YZ.Basement.Infra.IoC.csproj" />
 		<ProjectReference Include="..\..\03. Infra\Messaging\M.YZ.Basement.Messaging.IdempotentConsumers.Store.Sql\M.YZ.Basement.Messaging.IdempotentConsumers.Store.Sql.csproj" />
 		<ProjectReference Include="..\..\03. Infra\Messaging\M.YZ.Basement.Messaging.IdempotentConsumers\M.YZ.Basement.Messaging.IdempotentConsumers.csproj" />
 		<ProjectReference Include="..\..\03. Infra\Messaging\M.YZ.Basement.Messaging.MessageBus.RabbitMq\M.YZ.Basement.Messaging.MessageBus.RabbitMq.csproj" />

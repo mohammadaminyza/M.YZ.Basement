@@ -1,5 +1,5 @@
-﻿using M.YZ.Basement.MiniBlog.Core.Domain.Writers;
-using M.YZ.Basement.Utilities.Services.DependentyInjection;
+﻿using M.YZ.Basement.Infra.IoC.DependentyInjection;
+using M.YZ.Basement.MiniBlog.Core.Domain.Writers;
 
 namespace M.YZ.Basement.MiniBlog.EndPoints.Api.Infrastructures
 {

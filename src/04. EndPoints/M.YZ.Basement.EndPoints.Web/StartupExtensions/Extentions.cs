@@ -1,4 +1,4 @@
-﻿using M.YZ.Basement.Utilities.Services.DependentyInjection;
+﻿using M.YZ.Basement.Infra.IoC.DependentyInjection;
 
 namespace M.YZ.Basement.EndPoints.Web.StartupExtensions
 {

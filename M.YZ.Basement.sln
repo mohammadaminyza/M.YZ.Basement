@@ -95,6 +95,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "M.YZ.Basement.EndPoints.Web
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "M.YZ.Basement.EndPoints.Web.SqlServer", "src\04. EndPoints\M.YZ.Basement.EndPoints.Web.SqlServer\M.YZ.Basement.EndPoints.Web.SqlServer.csproj", "{98E2896A-F18C-441A-8938-F468183DFB25}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "IoC", "IoC", "{63BE277B-5BBD-43FD-B9AA-E0CCCD1723BC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "M.YZ.Basement.Infra.IoC", "src\03. Infra\IoC\M.YZ.Basement.Infra.IoC\M.YZ.Basement.Infra.IoC.csproj", "{75E53D5F-F660-4C14-B182-9CDCE29C16E9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -221,6 +225,10 @@ Global
 		{98E2896A-F18C-441A-8938-F468183DFB25}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{98E2896A-F18C-441A-8938-F468183DFB25}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{98E2896A-F18C-441A-8938-F468183DFB25}.Release|Any CPU.Build.0 = Release|Any CPU
+		{75E53D5F-F660-4C14-B182-9CDCE29C16E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{75E53D5F-F660-4C14-B182-9CDCE29C16E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{75E53D5F-F660-4C14-B182-9CDCE29C16E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{75E53D5F-F660-4C14-B182-9CDCE29C16E9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -269,6 +277,8 @@ Global
 		{1A2E1412-8808-49DA-B172-28CE0A53CCFA} = {2FACEBF9-B937-4A47-9934-AAB067E2E848}
 		{FEB15F5F-1CD3-42BA-A2EF-975E4ED826E6} = {9F3D8639-2A2B-4B1C-88F0-56EB14C12E09}
 		{98E2896A-F18C-441A-8938-F468183DFB25} = {9F3D8639-2A2B-4B1C-88F0-56EB14C12E09}
+		{63BE277B-5BBD-43FD-B9AA-E0CCCD1723BC} = {DC544674-9E95-4F6E-94C8-545A77391E66}
+		{75E53D5F-F660-4C14-B182-9CDCE29C16E9} = {63BE277B-5BBD-43FD-B9AA-E0CCCD1723BC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D5D1ECA0-C4FC-4886-ABDA-F867CC0914D9}

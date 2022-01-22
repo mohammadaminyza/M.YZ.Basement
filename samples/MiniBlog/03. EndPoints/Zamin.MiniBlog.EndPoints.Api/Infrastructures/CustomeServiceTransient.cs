@@ -1,7 +1,7 @@
-﻿using M.YZ.Basement.Infra.IoC.DependentyInjection;
-using M.YZ.Basement.MiniBlog.Core.Domain.Writers;
+﻿using M.YZ.Basement.MiniBlog.Core.Domain.Writers;
+using M.YZ.Basement.Utilities.DependencyInjection;
 
-namespace M.YZ.Basement.MiniBlog.EndPoints.Api.Infrastructures
+namespace Zamin.MiniBlog.EndPoints.Api.Infrastructures
 {
     public class CustomeServiceTransient : ICustomeServiceTransient, ITransientLifetime
     {

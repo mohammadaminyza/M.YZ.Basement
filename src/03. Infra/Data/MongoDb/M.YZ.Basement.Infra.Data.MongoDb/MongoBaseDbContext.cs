@@ -1,4 +1,4 @@
-﻿using M.YZ.Basement.Infra.Data.MongoDb.ChangeTracking;
+using M.YZ.Basement.Infra.Data.MongoDb.ChangeTracking;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -155,7 +155,7 @@ public abstract class MongoBaseDbContext
         }
     }
 
-    public virtual async Task SaveChangesAsync()
+    public virtual async Task SaveChangesAsync(CancellationToken cancellationToken = default)
     {
         //TODO Active Transaction
 
@@ -163,13 +163,13 @@ public abstract class MongoBaseDbContext
         {
             //await StartClientSectionAsync();
             //await Task.Run(BeginTransaction);
-            using var session = await MongoClient.StartSessionAsync();
+            using var session = await MongoClient.StartSessionAsync(cancellationToken: cancellationToken);
 
-            await Task.Run(ExecuteCommitHandler);
+            await Task.Run(ExecuteCommitHandler, cancellationToken);
 
-            await CommitTransactionAsync();
+            await CommitTransactionAsync(cancellationToken);
 
-            await Task.Run(EmptyTacker);
+            await Task.Run(EmptyTacker, cancellationToken);
         }
         catch (Exception e)
         {
@@ -214,9 +214,9 @@ public abstract class MongoBaseDbContext
         _clientSessionHandle.CommitTransaction();
     }
 
-    protected virtual async Task CommitTransactionAsync()
+    protected virtual async Task CommitTransactionAsync(CancellationToken cancellationToken = default)
     {
-        await _clientSessionHandle.CommitTransactionAsync();
+        await _clientSessionHandle.CommitTransactionAsync(cancellationToken);
     }
 
     /// <summary>

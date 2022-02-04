@@ -14,12 +14,12 @@ public class AppPartRegistrar
     public AppPartRegistrar(ControllerDetectorRepository appDataDbWrapper,
                                ApplicationPartDetector applicationPartDetector,
                                ILogger<AppPartRegistrar> logger,
-                               BasementConfigurationOptions basmentConfiguration)
+                               BasementConfigurationOptions basementConfiguration)
     {
         _appDataDbWrapper = appDataDbWrapper;
         _applicationPartDetector = applicationPartDetector;
         _logger = logger;
-        _zaminConfiguration = basmentConfiguration;
+        _zaminConfiguration = basementConfiguration;
     }
 
     public async Task Register()
@@ -36,14 +36,14 @@ public class AppPartRegistrar
 
     private async Task StartRegistration()
     {
-        var AppPart = GetAppPart();
+        var appPart = GetAppPart();
 
         var oldControllersAndAction = await _appDataDbWrapper.GetOldApplicationParts(_zaminConfiguration.ServiceName);
 
-        if (ApplicatoinExists(oldControllersAndAction))
-            await InsertExistingApplication(AppPart, oldControllersAndAction);
+        if (ApplicationExists(oldControllersAndAction))
+            await InsertExistingApplication(appPart, oldControllersAndAction);
         else
-            await InsertNewApplication(AppPart);
+            await InsertNewApplication(appPart);
 
     }
 
@@ -55,7 +55,7 @@ public class AppPartRegistrar
         return result;
     }
 
-    private static bool ApplicatoinExists(List<ApplicationControllerActionDto> oldControllersAndAction)
+    private static bool ApplicationExists(List<ApplicationControllerActionDto> oldControllersAndAction)
     {
         return oldControllersAndAction != null && oldControllersAndAction.Count > 1;
     }

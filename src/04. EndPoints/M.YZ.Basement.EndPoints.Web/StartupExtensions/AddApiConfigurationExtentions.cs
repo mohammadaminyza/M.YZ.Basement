@@ -3,6 +3,7 @@ using M.YZ.Basement.EndPoints.Web.Filters;
 using M.YZ.Basement.EndPoints.Web.Middlewares.ApiExceptionHandler;
 using Microsoft.OpenApi.Models;
 using System.Data.SqlClient;
+using M.YZ.Infra.Auth.ControllerDetectors.ASPServices;
 
 namespace M.YZ.Basement.EndPoints.Web.StartupExtensions
 {
@@ -61,6 +62,12 @@ namespace M.YZ.Basement.EndPoints.Web.StartupExtensions
                     return LogLevel.Error;
                 };
             });
+
+            if (configuration.AppPart.Enabled)
+            {
+                var appPartRegistrar = app.ApplicationServices.GetRequiredService<AppPartRegistrar>();
+                appPartRegistrar.Register().Wait();
+            }
 
             app.UseStatusCodePages();
             if (configuration.Swagger != null && configuration.Swagger.SwaggerDoc != null)

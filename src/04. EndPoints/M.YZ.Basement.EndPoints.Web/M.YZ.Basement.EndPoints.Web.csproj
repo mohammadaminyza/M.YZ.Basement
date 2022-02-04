@@ -52,6 +52,7 @@
 		<ProjectReference Include="..\..\02. Core\M.YZ.Basement.Core.ApplicationServices\M.YZ.Basement.Core.ApplicationServices.csproj" />
 		<ProjectReference Include="..\..\02. Core\M.YZ.Basement.Core.Domain.Toolkits\M.YZ.Basement.Core.Domain.Toolkits.csproj" />
 		<ProjectReference Include="..\..\02. Core\M.YZ.Basement.Core.Domain\M.YZ.Basement.Core.Domain.csproj" />
+		<ProjectReference Include="..\..\03. Infra\Auth\M.YZ.Infra.Auth.ControllerDetectors\M.YZ.Infra.Auth.ControllerDetectors.csproj" />
 		<ProjectReference Include="..\..\03. Infra\Data\M.YZ.Basement.Infra.Data.ChangeInterceptors\M.YZ.Basement.Infra.Data.ChangeInterceptors.csproj" />
 		<ProjectReference Include="..\..\03. Infra\Events\M.YZ.Basement.Infra.Events.Outbox\M.YZ.Basement.Infra.Events.Outbox.csproj" />
 		<ProjectReference Include="..\..\03. Infra\Events\M.YZ.Basement.Infra.Events.PoolingPublisher\M.YZ.Basement.Infra.Events.PoolingPublisher.csproj" />

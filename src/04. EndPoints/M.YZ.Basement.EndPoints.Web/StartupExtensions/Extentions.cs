@@ -1,4 +1,5 @@
-﻿using M.YZ.Basement.Infra.IoC.DependentyInjection;
+﻿using M.YZ.Basement.Infra.IoC;
+using M.YZ.Basement.Utilities.DependencyInjection;
 
 namespace M.YZ.Basement.EndPoints.Web.StartupExtensions
 {
@@ -10,49 +11,12 @@ namespace M.YZ.Basement.EndPoints.Web.StartupExtensions
         {
 
             var assemblies = GetAssemblies(assemblyNamesForSearch);
-            services.AddApplicationServices(assemblies).AddDataAccess(assemblies).AddBasementServices(assemblies).AddCustomeDepenecies(assemblies);
+            services.AddInterfaceDependenciesLifeTime(assemblies)
+                .AddApplicationServices(assemblies)
+                .AddDataAccess(assemblies)
+                .AddBasementServices(assemblies);
             return services;
         }
-        public static IServiceCollection AddCustomeDepenecies(this IServiceCollection services, IEnumerable<Assembly> assemblies)
-        {
-            return services.AddWithTransientLifetime(assemblies, typeof(ITransientLifetime))
-                .AddWithScopedLifetime(assemblies, typeof(IScopeLifetime))
-                .AddWithSingletonLifetime(assemblies, typeof(ISingletoneLifetime));
-        }
-
-        public static IServiceCollection AddWithTransientLifetime(this IServiceCollection services,
-            IEnumerable<Assembly> assembliesForSearch,
-            params Type[] assignableTo)
-        {
-            services.Scan(s => s.FromAssemblies(assembliesForSearch)
-                .AddClasses(c => c.AssignableToAny(assignableTo))
-                .AsImplementedInterfaces()
-                .WithTransientLifetime());
-            return services;
-        }
-        public static IServiceCollection AddWithScopedLifetime(this IServiceCollection services,
-           IEnumerable<Assembly> assembliesForSearch,
-           params Type[] assignableTo)
-        {
-            services.Scan(s => s.FromAssemblies(assembliesForSearch)
-                .AddClasses(c => c.AssignableToAny(assignableTo))
-                .AsImplementedInterfaces()
-                .WithScopedLifetime());
-            return services;
-        }
-
-        public static IServiceCollection AddWithSingletonLifetime(this IServiceCollection services,
-            IEnumerable<Assembly> assembliesForSearch,
-            params Type[] assignableTo)
-        {
-            services.Scan(s => s.FromAssemblies(assembliesForSearch)
-                .AddClasses(c => c.AssignableToAny(assignableTo))
-                .AsImplementedInterfaces()
-                .WithSingletonLifetime());
-            return services;
-        }
-
-
 
         private static List<Assembly> GetAssemblies(string[] assmblyName)
         {

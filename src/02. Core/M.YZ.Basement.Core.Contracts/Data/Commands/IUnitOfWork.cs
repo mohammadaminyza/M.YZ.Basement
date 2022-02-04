@@ -1,10 +1,12 @@
-﻿namespace M.YZ.Basement.Core.Contracts.Data.Commands;
+﻿using M.YZ.Basement.Utilities.DependencyInjection;
+
+namespace M.YZ.Basement.Core.Contracts.Data.Commands;
 /// <summary>
 /// تعریف Interface برای الگوی UnitOfWork جهت مدیریت تراکنش‌ها با دیتابیس در این قسمت انجام شده است
 /// تعریف کامل این الگو در کتاب P of EAA وجود دارد و تعریف اولیه را در آدرس زیر می‌توان مشاهده کرد
 /// https://martinfowler.com/eaaCatalog/unitOfWork.html
 /// </summary>
-public interface IUnitOfWork
+public interface IUnitOfWork : ITransientLifetime
 {
     /// <summary>
     /// در صورت نیاز به کنترل تراکنش‌ها از این متد جهت شروع تراکنش استفاده می‌شود.

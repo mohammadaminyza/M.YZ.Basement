@@ -11,6 +11,8 @@ using M.YZ.Basement.Utilities.Services.Logger;
 using M.YZ.Basement.Utilities.Services.MessageBus;
 using M.YZ.Basement.Utilities.Services.Serializers;
 using M.YZ.Basement.Utilities.Services.Users;
+using M.YZ.Infra.Auth.ControllerDetectors.ASPServices;
+using M.YZ.Infra.Auth.ControllerDetectors.Data;
 using Microsoft.AspNetCore.Http;
 
 namespace M.YZ.Basement.EndPoints.Web.StartupExtensions
@@ -33,6 +35,7 @@ namespace M.YZ.Basement.EndPoints.Web.StartupExtensions
             services.AddPoolingPublisher(assembliesForSearch);
             services.AddTransient<BasementServices>();
             services.AddEntityChangeInterception(assembliesForSearch);
+            services.AddControllerDetectors(assembliesForSearch);
             return services;
         }
 
@@ -113,7 +116,7 @@ namespace M.YZ.Basement.EndPoints.Web.StartupExtensions
 
         public static IServiceCollection AddJsonSerializer(this IServiceCollection services, IEnumerable<Assembly> assembliesForSearch)
         {
-            var _basementConfigurations = services.BuildServiceProvider().GetService<BasementConfigurationOptions>();
+            var _basementConfigurations = services.BuildServiceProvider().GetRequiredService<BasementConfigurationOptions>();
             services.Scan(s => s.FromAssemblies(assembliesForSearch)
                 .AddClasses(c => c.Where(type => type.Name == _basementConfigurations.JsonSerializerTypeName && typeof(IJsonSerializer).IsAssignableFrom(type)))
                 .AsImplementedInterfaces()
@@ -123,7 +126,7 @@ namespace M.YZ.Basement.EndPoints.Web.StartupExtensions
 
         public static IServiceCollection AddExcelSerializer(this IServiceCollection services, IEnumerable<Assembly> assembliesForSearch)
         {
-            var _basementConfigurations = services.BuildServiceProvider().GetService<BasementConfigurationOptions>();
+            var _basementConfigurations = services.BuildServiceProvider().GetRequiredService<BasementConfigurationOptions>();
             services.Scan(s => s.FromAssemblies(assembliesForSearch)
                 .AddClasses(classes => classes.Where(type => type.Name == _basementConfigurations.ExcelSerializerTypeName && typeof(IExcelSerializer).IsAssignableFrom(type)))
                 .AsImplementedInterfaces()
@@ -220,6 +223,19 @@ namespace M.YZ.Basement.EndPoints.Web.StartupExtensions
                         EntityChageInterceptorRepositoryTypeName && typeof(IEntityChageInterceptorItemRepository).IsAssignableFrom(type)))
                     .AsImplementedInterfaces()
                     .WithScopedLifetime());
+            }
+            return services;
+        }
+
+        private static IServiceCollection AddControllerDetectors(this IServiceCollection services,
+            IEnumerable<Assembly> assembliesForSearch)
+        {
+            var _zaminConfigurations = services.BuildServiceProvider().GetRequiredService<BasementConfigurationOptions>();
+            if (_zaminConfigurations.AppPart.Enabled)
+            {
+                services.AddTransient<ApplicationPartDetector>();
+                services.AddTransient<AppPartRegistrar>();
+                services.AddTransient<ControllerDetectorRepository>();
             }
             return services;
         }

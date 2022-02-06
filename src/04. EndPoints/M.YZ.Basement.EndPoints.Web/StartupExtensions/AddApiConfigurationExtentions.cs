@@ -90,6 +90,7 @@ namespace M.YZ.Basement.EndPoints.Web.StartupExtensions
             app.UseHttpsRedirection();
             app.UseRouting();
             app.UseAuthorization();
+            app.UseSerilogRequestLogging();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

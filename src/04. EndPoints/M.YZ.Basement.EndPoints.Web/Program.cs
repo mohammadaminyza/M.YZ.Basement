@@ -4,15 +4,21 @@ public class BasementProgram
 {
     public WebApplicationBuilder Main(string[] args, params string[] appSettingFiles)
     {
+        var builder = CreateHostBuilder(args, appSettingFiles);
+
+        builder.AddLogger(appSettingFiles);
+
         try
         {
             StartLog();
-            return CreateHostBuilder(args, appSettingFiles);
+
+            return builder;
         }
         catch (Exception ex)
         {
             FatalLog(ex);
-            throw;
+
+            return builder;
         }
         finally
         {
@@ -24,13 +30,19 @@ public class BasementProgram
     {
         try
         {
+            var builder =
+                CreateHostBuilder(args, startUp, appSettingFiles);
+
             StartLog();
-            CreateHostBuilder(args, startUp, appSettingFiles).Build().Run();
+
+            builder.Build().Run();
+
             return 0;
         }
         catch (Exception ex)
         {
             FatalLog(ex);
+
             return 1;
         }
         finally
@@ -43,50 +55,20 @@ public class BasementProgram
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        AddAppsettings(builder.Configuration, appSettingFiles);
-
-        AddLogger(builder);
+        builder.Host
+            .DefaultHostBuilder(appSettingFiles);
 
         return builder;
     }
-    private IHostBuilder CreateHostBuilder(string[] args, Type startUp, params string[] appSettingFiles) =>
-        Host.CreateDefaultBuilder(args)
-        .ConfigureAppConfiguration((ctx, config) =>
-        {
-            AddAppsettings(config, appSettingFiles);
-            AddLogger(config.Build());
-        })
+
+    private IHostBuilder CreateHostBuilder(string[] args, Type startUp, params string[] appSettingFiles)
+    {
+        return Host.CreateDefaultBuilder(args)
+            .DefaultHostBuilder(appSettingFiles)
             .ConfigureWebHostDefaults(webBuilder =>
             {
                 webBuilder.UseStartup(startUp);
-            })
-        .UseSerilog();
-
-    private IConfigurationBuilder AddAppsettings(IConfigurationBuilder configurationBuilder, params string[] appSettingFiles)
-    {
-        if (appSettingFiles == null || !appSettingFiles.Any())
-        {
-            appSettingFiles = new string[] { "appsettings.json" };
-        }
-        foreach (var item in appSettingFiles)
-        {
-            configurationBuilder.AddJsonFile(item);
-        }
-
-        return configurationBuilder;
-    }
-
-    private void AddLogger(IConfiguration configuration)
-    {
-        Log.Logger = new LoggerConfiguration()
-            .ReadFrom.Configuration(configuration)
-            .CreateLogger();
-    }
-
-    private void AddLogger(WebApplicationBuilder builder)
-    {
-        AddLogger(builder.Configuration);
-        builder.Host.UseSerilog(Log.Logger);
+            });
     }
 
     private void StartLog()

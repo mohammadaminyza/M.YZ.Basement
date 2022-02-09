@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace M.YZ.Basement.MiniBlog.EndPoints.Api.Controllers
 {
     [Route("api/[Controller]")]
-    public class PeopleController : BaseController
+    public class PeopleController : BaseHttpController
     {
         private readonly ISendMessageBus _messageBus;
 

@@ -1,13 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System.Net;
+﻿using System.Net;
 using M.YZ.Basement.Core.ApplicationServices.Events;
+using M.YZ.Basement.EndPoints.Web.Extensions;
 using M.YZ.Basement.Utilities;
 using M.YZ.Basement.Utilities.Services.Serializers;
-using M.YZ.Basement.EndPoints.Web.Extensions;
+using Microsoft.AspNetCore.Mvc;
 
 namespace M.YZ.Basement.EndPoints.Web.Controllers
 {
-    public class BaseController : Controller
+    public class BaseHttpController : Controller
     {
         protected ICommandDispatcher CommandDispatcher => HttpContext.CommandDispatcher();
         protected IQueryDispatcher QueryDispatcher => HttpContext.QueryDispatcher();
@@ -119,5 +119,10 @@ namespace M.YZ.Basement.EndPoints.Web.Controllers
             }
             return BadRequest(result.Messages);
         }
+    }
+
+    [Obsolete(message: "It'll Replace In Feature With BaseHttpController")]
+    public class BaseController : BaseHttpController
+    {
     }
 }

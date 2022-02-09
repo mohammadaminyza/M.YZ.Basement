@@ -11,6 +11,7 @@ public class BasementConfigurationOptions
     public string UserInfoServiceTypeName { get; set; } = "FakeUserInfoService";
     public bool RegisterAutomapperProfiles { get; set; } = true;
     public string AssmblyNameForLoad { get; set; } = string.Empty;
+    public ApiArchitecturalType ApiArchitecturalType { get; set; } = ApiArchitecturalType.Rest;
     public AppPartOptions AppPart { get; set; } = new AppPartOptions();
     public MessageBusOptions MessageBus { get; set; } = new MessageBusOptions();
     public MessageConsumerOptions Messageconsumer { get; set; } = new MessageConsumerOptions();

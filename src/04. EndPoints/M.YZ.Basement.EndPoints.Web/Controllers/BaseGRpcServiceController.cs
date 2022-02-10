@@ -1,5 +1,4 @@
-﻿using Google.Protobuf;
-using Google.Protobuf.WellKnownTypes;
+﻿using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using M.YZ.Basement.Core.ApplicationServices.Events;
 using M.YZ.Basement.Utilities;
@@ -20,26 +19,78 @@ public class BaseGRpcServiceController
         _eventDispatcher = serviceProvider.CreateScope().ServiceProvider.GetRequiredService<IEventDispatcher>();
         _basementApplicationContext = serviceProvider.CreateScope().ServiceProvider.GetRequiredService<BasementServices>();
     }
-    public async Task<TCommandResult> Create<TCommand, TCommandResult>(TCommand command) where TCommand : class, ICommand<TCommandResult> where TCommandResult : IMessage<TCommandResult>
+
+    //Todo Add Stream in Feature
+
+    public async Task<TCommandResult> Create<TCommand, TCommandResult>(TCommand command) where TCommand : class, ICommand<TCommandResult>
     {
         var result = await _commandDispatcher.Send<TCommand, TCommandResult>(command);
 
-        return await GRpcErrorHandler(result);
+        return await RpcResponseHandler(result);
     }
 
     public async Task<Empty> Create<TCommand>(TCommand command) where TCommand : class, ICommand
     {
         var result = await _commandDispatcher.Send(command);
 
-        return await GRpcErrorHandler(result);
+        return await RpcResponseHandler(result);
     }
 
 
-
-    private Task<Empty> GRpcErrorHandler(CommandResult response)
+    protected async Task<TCommandResult> Edit<TCommand, TCommandResult>(TCommand command) where TCommand : class, ICommand<TCommandResult>
     {
-        var message = string.Join(" , ", response.Messages);
+        var result = await _commandDispatcher.Send<TCommand, TCommandResult>(command);
+        var message = MessagesToMessage(result.Messages);
+
+        return await RpcResponseHandler(result);
+    }
+
+    protected async Task<Empty> Edit<TCommand>(TCommand command) where TCommand : class, ICommand
+    {
+        var result = await _commandDispatcher.Send(command);
+        var message = MessagesToMessage(result.Messages);
+
+        return await RpcResponseHandler(result);
+    }
+
+
+    protected async Task<TCommandResult> Delete<TCommand, TCommandResult>(TCommand command) where TCommand : class, ICommand<TCommandResult>
+    {
+        var result = await _commandDispatcher.Send<TCommand, TCommandResult>(command);
+
+        return await RpcResponseHandler(result);
+    }
+
+    protected async Task<Empty> Delete<TCommand>(TCommand command) where TCommand : class, ICommand
+    {
+        var result = await _commandDispatcher.Send(command);
+        var message = MessagesToMessage(result.Messages);
+
+        return await RpcResponseHandler(result);
+    }
+
+    public async Task<TQueryResult> Query<TQuery, TQueryResult>(TQuery query)
+        where TQuery : class, IQuery<TQueryResult>
+    {
+        var result = await _queryDispatcher.Execute<TQuery, TQueryResult>(query);
+        var message = MessagesToMessage(result.Messages);
+
+        if (result.Status == ApplicationServiceStatus.NotFound || result.Data == null)
+        {
+            throw new RpcException(new Status(StatusCode.NotFound, message));
+        }
+
+        else if (result.Status == ApplicationServiceStatus.Ok)
+            return result.Data;
+
+        throw BadRequest(message);
+    }
+
+
+    private Task<Empty> RpcResponseHandler(CommandResult response)
+    {
         var status = response.Status;
+        var message = MessagesToMessage(response.Messages);
 
         if (status == ApplicationServiceStatus.Ok)
         {
@@ -59,11 +110,11 @@ public class BaseGRpcServiceController
         throw BadRequest(message);
     }
 
-    private Task<TResponse> GRpcErrorHandler<TResponse>(CommandResult<TResponse> response) where TResponse : IMessage<TResponse>
+    private Task<TCommandResult> RpcResponseHandler<TCommandResult>(CommandResult<TCommandResult> result)
     {
-        var message = string.Join(" , ", response.Messages);
-        var status = response.Status;
-        var data = response.Data;
+        var status = result.Status;
+        var data = result.Data;
+        var message = MessagesToMessage(result.Messages);
 
         if (status == ApplicationServiceStatus.Ok)
         {
@@ -86,5 +137,12 @@ public class BaseGRpcServiceController
     private RpcException BadRequest(string error)
     {
         throw new RpcException(new Status(StatusCode.Aborted, error));
+    }
+
+    private string MessagesToMessage(IEnumerable<string> messages)
+    {
+        var message = string.Join("\n", messages);
+
+        return message;
     }
 }

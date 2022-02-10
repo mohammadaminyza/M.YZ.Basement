@@ -70,8 +70,15 @@ public class GRpcApiExceptionHandler : Interceptor
             throw new RpcException(new Status(StatusCode.OutOfRange, exception.Status.Detail));
         }
 
+        else if (IsOk(exception))
+        {
+        }
+
         HandleGRpcExceptionAsync(exception, options);
     }
+
+    private bool IsOk(RpcException exception) =>
+        exception.Message.Contains("Ok");
 
     private bool IsNotFound(RpcException exception) =>
        exception.Message.Contains("NotFound");

@@ -42,6 +42,9 @@ namespace M.YZ.Basement.EndPoints.Web.StartupExtensions
 
             services.AddBasementDependencies(basementConfigurations.AssmblyNameForLoad.Split(','));
 
+            services.AddCors();
+            services.AddAuthorization();
+
             if (basementConfigurations.ApiArchitecturalType == ApiArchitecturalType.Rest)
                 AddSwagger(services);
 

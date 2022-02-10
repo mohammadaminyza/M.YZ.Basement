@@ -6,6 +6,7 @@
 		<RepositoryUrl>https://github.com/mohammadaminyza/M.YZ.Basement</RepositoryUrl>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 	</PropertyGroup>
 
 	<ItemGroup>

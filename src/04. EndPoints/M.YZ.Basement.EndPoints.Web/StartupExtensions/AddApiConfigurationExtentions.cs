@@ -1,9 +1,8 @@
 ﻿using FluentValidation.AspNetCore;
 using M.YZ.Basement.EndPoints.Web.Filters;
 using M.YZ.Basement.EndPoints.Web.Middlewares.ApiExceptionHandler;
-using Microsoft.OpenApi.Models;
-using System.Data.SqlClient;
 using M.YZ.Infra.Auth.ControllerDetectors.ASPServices;
+using Microsoft.OpenApi.Models;
 
 namespace M.YZ.Basement.EndPoints.Web.StartupExtensions
 {
@@ -24,7 +23,6 @@ namespace M.YZ.Basement.EndPoints.Web.StartupExtensions
                     options.Filters.AddService<ValidateModelStateAttribute>();
                     options.Filters.Add(typeof(TrackActionPerformanceFilter));
                 }).AddFluentValidation();
-
             }
 
             else if (basementConfigurations.ApiArchitecturalType == ApiArchitecturalType.GRpc)
@@ -90,12 +88,14 @@ namespace M.YZ.Basement.EndPoints.Web.StartupExtensions
             app.UseAuthorization();
             app.UseSerilogRequestLogging();
 
-            app.UseEndpoints(endpoints =>
+            if (configuration.ApiArchitecturalType == ApiArchitecturalType.Rest)
             {
-                endpoints.MapControllers();
-            });
+                app.UseEndpoints(endpoints =>
+                {
+                    endpoints.MapControllers();
+                });
+            }
         }
-
 
         private static void AddSwagger(IServiceCollection services)
         {

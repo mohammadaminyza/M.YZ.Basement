@@ -1,10 +1,6 @@
 # M.YZ.Basement
 <br/>
-M.YZ.Basement Is Base On Zamin By Mr. Orumand
+M.YZ.Basement Helps You To Make Microservices Or Any Kind Of Applications With Sql Server And Asp.net Core
 <br/>
 CopyRight By Zamin
 <br/>
-https://github.com/oroumand/Zamin/
-<br/>
-
-Please Help Us To Improve This Package

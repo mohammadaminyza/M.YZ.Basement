@@ -1,9 +1,8 @@
 ﻿using FluentValidation.AspNetCore;
 using M.YZ.Basement.EndPoints.Web.Filters;
 using M.YZ.Basement.EndPoints.Web.Middlewares.ApiExceptionHandler;
-using Microsoft.OpenApi.Models;
-using System.Data.SqlClient;
 using M.YZ.Infra.Auth.ControllerDetectors.ASPServices;
+using Microsoft.OpenApi.Models;
 
 namespace M.YZ.Basement.EndPoints.Web.StartupExtensions
 {
@@ -16,61 +15,56 @@ namespace M.YZ.Basement.EndPoints.Web.StartupExtensions
             configuration.GetSection(basementConfigurations.SectionName).Bind(basementConfigurations);
             services.AddSingleton(basementConfigurations);
             services.AddScoped<ValidateModelStateAttribute>();
-            services.AddControllers(options =>
+
+            if (basementConfigurations.ApiArchitecturalType == ApiArchitecturalType.Rest)
             {
-                options.Filters.AddService<ValidateModelStateAttribute>();
-                options.Filters.Add(typeof(TrackActionPerformanceFilter));
-            }).AddFluentValidation();
+                services.AddControllers(options =>
+                {
+                    options.Filters.AddService<ValidateModelStateAttribute>();
+                    options.Filters.Add(typeof(TrackActionPerformanceFilter));
+                }).AddFluentValidation();
+            }
+
+            else if (basementConfigurations.ApiArchitecturalType == ApiArchitecturalType.GRpc)
+            {
+                services.AddGrpc(options =>
+                {
+                    options.Interceptors.Add<GRpcApiExceptionHandler>();
+                    options.EnableDetailedErrors = true;
+                });
+
+                services.AddBasementGRpc(basementConfigurations);
+            }
 
             services.AddEndpointsApiExplorer();
 
             services.AddBasementDependencies(basementConfigurations.AssmblyNameForLoad.Split(','));
 
-            AddSwagger(services);
+            services.AddCors();
+            services.AddAuthorization();
+
+            if (basementConfigurations.ApiArchitecturalType == ApiArchitecturalType.Rest)
+                AddSwagger(services);
+
             return services;
         }
 
-        private static void AddSwagger(IServiceCollection services)
-        {
-            var basementConfigurations = services.BuildServiceProvider().GetService<BasementConfigurationOptions>();
-            if (basementConfigurations?.Swagger?.Enabled == true && basementConfigurations.Swagger.SwaggerDoc != null)
-            {
-                services.AddSwaggerGen(c =>
-                {
-                    c.SwaggerDoc(basementConfigurations.Swagger.SwaggerDoc.Name, new OpenApiInfo { Title = basementConfigurations.Swagger.SwaggerDoc.Title, Version = basementConfigurations.Swagger.SwaggerDoc.Version });
-                });
-            }
-        }
         public static void UseBasementApiConfigure(this IApplicationBuilder app, BasementConfigurationOptions configuration, IWebHostEnvironment env)
         {
-            app.UseApiExceptionHandler(options =>
-            {
-                options.AddResponseDetails = (context, ex, error) =>
+            if (configuration.ApiArchitecturalType == ApiArchitecturalType.Rest)
+                app.UseApiExceptionHandler(options =>
                 {
-                    if (ex.GetType().Name == typeof(SqlException).Name)
-                    {
-                        error.Detail = "Exception was a database exception!";
-                    }
-                };
-                options.DetermineLogLevel = ex =>
-                {
-                    if (ex.Message.StartsWith("cannot open database", StringComparison.InvariantCultureIgnoreCase) ||
-                        ex.Message.StartsWith("a network-related", StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        return LogLevel.Critical;
-                    }
-                    return LogLevel.Error;
-                };
-            });
+                    ApiExceptionOptions.ApiExceptionOptionDefaultSetting(options);
+                });
 
-            if (configuration.AppPart.Enabled)
+            if (configuration.ApiArchitecturalType == ApiArchitecturalType.Rest && configuration.AppPart.Enabled)
             {
                 var appPartRegistrar = app.ApplicationServices.GetRequiredService<AppPartRegistrar>();
                 appPartRegistrar.Register().Wait();
             }
 
             app.UseStatusCodePages();
-            if (configuration.Swagger != null && configuration.Swagger.SwaggerDoc != null)
+            if (configuration.ApiArchitecturalType == ApiArchitecturalType.Rest && configuration.Swagger != null && configuration.Swagger.SwaggerDoc != null)
             {
 
                 app.UseSwagger();
@@ -87,18 +81,32 @@ namespace M.YZ.Basement.EndPoints.Web.StartupExtensions
                 builder.AllowAnyHeader();
                 builder.AllowAnyMethod();
             });
+
             app.UseHttpsRedirection();
             app.UseRouting();
+
             app.UseAuthorization();
             app.UseSerilogRequestLogging();
-            app.UseEndpoints(endpoints =>
+
+            if (configuration.ApiArchitecturalType == ApiArchitecturalType.Rest)
             {
-                endpoints.MapControllers();
-            });
+                app.UseEndpoints(endpoints =>
+                {
+                    endpoints.MapControllers();
+                });
+            }
         }
 
-
-
-
+        private static void AddSwagger(IServiceCollection services)
+        {
+            var basementConfigurations = services.BuildServiceProvider().GetService<BasementConfigurationOptions>();
+            if (basementConfigurations?.Swagger?.Enabled == true && basementConfigurations.Swagger.SwaggerDoc != null)
+            {
+                services.AddSwaggerGen(c =>
+                {
+                    c.SwaggerDoc(basementConfigurations.Swagger.SwaggerDoc.Name, new OpenApiInfo { Title = basementConfigurations.Swagger.SwaggerDoc.Title, Version = basementConfigurations.Swagger.SwaggerDoc.Version });
+                });
+            }
+        }
     }
 }

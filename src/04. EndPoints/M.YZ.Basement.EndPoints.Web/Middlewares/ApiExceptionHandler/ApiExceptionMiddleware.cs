@@ -12,14 +12,15 @@ namespace M.YZ.Basement.EndPoints.Web.Middlewares.ApiExceptionHandler
         private readonly ILogger<ApiExceptionMiddleware> _logger;
         private readonly ApiExceptionOptions _options;
         private readonly IJsonSerializer _serializer;
-        public ApiExceptionMiddleware(ApiExceptionOptions options, RequestDelegate next,
-            ILogger<ApiExceptionMiddleware> logger, IJsonSerializer serializer
-            )
+        private readonly BasementConfigurationOptions _basementConfigurationOptions;
+
+        public ApiExceptionMiddleware(RequestDelegate next, ILogger<ApiExceptionMiddleware> logger, ApiExceptionOptions options, IJsonSerializer serializer, BasementConfigurationOptions basementConfigurationOptions)
         {
             _next = next;
             _logger = logger;
             _options = options;
             _serializer = serializer;
+            _basementConfigurationOptions = basementConfigurationOptions;
         }
 
         public async Task Invoke(HttpContext context, IScopeInformation scopeInfo /* other dependencies */)
@@ -33,7 +34,7 @@ namespace M.YZ.Basement.EndPoints.Web.Middlewares.ApiExceptionHandler
             }
             catch (Exception ex)
             {
-                await HandleExceptionAsync(context, ex, hostScope, requestScope);
+                await HandleRestExceptionAsync(context, ex);
             }
             finally
             {
@@ -42,7 +43,7 @@ namespace M.YZ.Basement.EndPoints.Web.Middlewares.ApiExceptionHandler
             }
         }
 
-        private Task HandleExceptionAsync(HttpContext context, Exception exception, IDisposable hostScopInfo, IDisposable requestScopeInfo)
+        private Task HandleRestExceptionAsync(HttpContext context, Exception exception)
         {
             var error = new ApiError
             {
@@ -54,7 +55,7 @@ namespace M.YZ.Basement.EndPoints.Web.Middlewares.ApiExceptionHandler
 
             _options.AddResponseDetails?.Invoke(context, exception, error);
 
-            var innerExMessage = GetInnermostExceptionMessage(exception);
+            var innerExMessage = exception.GetInnermostExceptionMessage();
 
             var level = _options.DetermineLogLevel?.Invoke(exception) ?? LogLevel.Error;
             _logger.Log(level, exception, "BADNESS!!! " + innerExMessage + " -- {ErrorId}.", error.Id);
@@ -63,14 +64,6 @@ namespace M.YZ.Basement.EndPoints.Web.Middlewares.ApiExceptionHandler
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
             return context.Response.WriteAsync(result);
-        }
-
-        private string GetInnermostExceptionMessage(Exception exception)
-        {
-            if (exception.InnerException != null)
-                return GetInnermostExceptionMessage(exception.InnerException);
-
-            return exception.Message;
         }
     }
 }
